@@ -2,6 +2,7 @@ package com.fresh.veggies.Controller;
 
 import java.util.List;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,7 +28,7 @@ public class CrateEntryController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<CrateEntry> addCrateEntry(@RequestBody CrateEntry crateEntry) {
+    public ResponseEntity<CrateEntry> addCrateEntry(@Valid @RequestBody CrateEntry crateEntry) {
         return ResponseEntity.status(HttpStatus.CREATED).body(crateEntryService.addCrateEntry(crateEntry));
     }
 
@@ -47,7 +48,7 @@ public class CrateEntryController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<CrateEntry> updateCrateEntry(@PathVariable Long id, @RequestBody CrateEntry crateEntry) {
+    public ResponseEntity<CrateEntry> updateCrateEntry(@PathVariable Long id, @Valid @RequestBody CrateEntry crateEntry) {
         return ResponseEntity.ok(crateEntryService.updateCrateEntry(id, crateEntry));
     }
 

@@ -1,7 +1,10 @@
 package com.fresh.veggies.Services;
 
+import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.fresh.veggies.DTO.CustomerPaymentResponseDto;
@@ -66,6 +69,14 @@ public class CustomerPaymentService {
 				.stream().map(this::convertToDTO).toList();
 	}
 
+	public Page<CustomerPaymentResponseDto> getCustomerPaymentsByCustomerId(
+			Long customerId, Pageable pageable, LocalDate startDate, LocalDate endDate) {
+		return customerPaymentRepository
+				.findByCustomerIdAndPaymentDateTimeBetweenOrderByPaymentDateTimeDesc(
+						customerId, startDate, endDate, pageable)
+				.map(this::convertToDTO);
+	}
+
 	public CustomerPaymentResponseDto convertToDTO(CustomerPayment payment) {
 		CustomerPaymentResponseDto dto = new CustomerPaymentResponseDto();
 		dto.setPaymentId(payment.getId());
@@ -75,5 +86,10 @@ public class CustomerPaymentService {
 		dto.setMethod(payment.getPaymentMethod());
 		dto.setDateTime(payment.getPaymentDateTime());
 		return dto;
+	}
+	public CustomerPaymentResponseDto getByPaymentId(Long paymentId) {
+		CustomerPayment payment = customerPaymentRepository.findById(paymentId)
+				.orElseThrow(() -> new RuntimeException("Customer payment not found with id: " + paymentId));
+		return convertToDTO(payment);
 	}
 }

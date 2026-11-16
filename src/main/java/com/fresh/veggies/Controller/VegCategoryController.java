@@ -3,6 +3,7 @@ package com.fresh.veggies.Controller;
 import com.fresh.veggies.Entity.VegCategory;
 import com.fresh.veggies.DTO.ApiResponse;
 import com.fresh.veggies.Services.VegCategoryService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ public class VegCategoryController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<ApiResponse<VegCategory>> addVegCategory(@RequestBody VegCategory vegCategory) {
+    public ResponseEntity<ApiResponse<VegCategory>> addVegCategory(@Valid @RequestBody VegCategory vegCategory) {
         VegCategory addedCategory = vegCategoryService.addVegCategory(vegCategory);
         return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse<>("VegCategory added successfully", addedCategory));
     }
@@ -36,7 +37,7 @@ public class VegCategoryController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<ApiResponse<VegCategory>> updateVegCategory(@PathVariable Long id, @RequestBody VegCategory vegCategory) {
+    public ResponseEntity<ApiResponse<VegCategory>> updateVegCategory(@PathVariable Long id, @Valid @RequestBody VegCategory vegCategory) {
         VegCategory updatedCategory = vegCategoryService.updateVegCategory(id, vegCategory);
         return ResponseEntity.ok(new ApiResponse<>("VegCategory updated successfully", updatedCategory));
     }

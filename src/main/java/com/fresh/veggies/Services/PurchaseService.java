@@ -15,6 +15,7 @@ import com.fresh.veggies.Repository.VegetableRepo;
 
 import jakarta.transaction.Transactional;
 
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -160,11 +161,12 @@ public class PurchaseService {
         pr.setSuppliername(supplier.getName());
         pr.setPurchaseId(purchase.getId());
         pr.setVehicleNumber(purchase.getVehiclename());
+        pr.setTruckWeight(purchase.getTruckWeight());
         pr.setNetAmount(purchase.getNetAmount());
         List<PurcahseItemResDTO> item = purchase.getPurchaseItems().stream().map( items-> {
                       PurcahseItemResDTO response= new PurcahseItemResDTO();
                         Vegetable veg=items.getVegetable();
-                      response.setVegetableName(veg.getName());
+                      response.setVegetableName(veg.getOdianame());
                       response.setKg(items.getKg());
                       response.setPurchasePrice(items.getPurchasePrice());
                       response.setTotalAmount(items.getTotalAmount());
@@ -173,5 +175,14 @@ public class PurchaseService {
 
            pr.setPurchaseItems(item);
            return pr;
+    }
+    public List<PurchaseResponseDTO> last30Purchase(Long supplierId){
+        List<Purchase> purchase = purchaseRepository.findTop30BySupplierIdOrderByEntryDateDesc(supplierId);
+               return purchase.stream().map(this::convertDTO).toList();
+
+    }
+    public Page<PurchaseResponseDTO> getdata(Long Id,LocalDate startdate,LocalDate enddate,org.springframework.data.domain.Pageable page){
+        Page<Purchase> pp= purchaseRepository.findBySupplierIdAndEntryDateBetweenOrderByEntryDateDesc(Id, startdate,enddate,page);
+        return pp.map(this::convertDTO);
     }
 }

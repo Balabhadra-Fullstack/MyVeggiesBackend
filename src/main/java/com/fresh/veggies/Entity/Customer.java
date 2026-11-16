@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -12,6 +13,7 @@ public class Customer {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     public Long id;
+    @NotBlank(message = "Customer name is required")
     public String name;
     public String mobileNumber;
     public String address;

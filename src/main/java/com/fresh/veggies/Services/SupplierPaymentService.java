@@ -10,8 +10,10 @@ import com.fresh.veggies.Repository.SupplierRepo;
 
 import jakarta.transaction.Transactional;
 
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -73,5 +75,12 @@ public class SupplierPaymentService {
         dto.setMethod(payment.getPaymentMethod());
         dto.setDateTime(payment.getPaymentDateTime());
         return dto;
+    }
+    public Page<SupplierPaymentResponseDTO> getSupplierPaymentsBySupplierId(Long supplierId, org.springframework.data.domain.Pageable pageable,LocalDate startDate, LocalDate endDate) {
+        Page<SupplierPayment> paymentsPage = supplierPaymentRepository.findBySupplierIdAndPaymentDateTimeBetweenOrderByPaymentDateTimeDesc(supplierId, startDate, endDate, pageable);
+        return paymentsPage.map(this::convertToDTO);
+    }
+    public SupplierPayment getByPaymentId(Long paymenId){
+        return supplierPaymentRepository.findById(paymenId).orElseThrow(()->new RuntimeException("Supplier Payment Not Found With This Id"+paymenId));
     }
 }

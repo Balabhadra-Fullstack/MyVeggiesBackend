@@ -4,6 +4,7 @@ import com.fresh.veggies.Entity.Owner;
 import com.fresh.veggies.DTO.ApiResponse;
 import com.fresh.veggies.DTO.OwnerResponseDTO;
 import com.fresh.veggies.Services.OwnerService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,7 @@ public class OwnerController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<ApiResponse<OwnerResponseDTO>> addOwner(@RequestBody Owner owner) {
+    public ResponseEntity<ApiResponse<OwnerResponseDTO>> addOwner(@Valid @RequestBody Owner owner) {
         Owner addedOwner = ownerService.addOwner(owner);
         return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse<>("Owner added successfully", toResponse(addedOwner)));
     }
@@ -37,7 +38,7 @@ public class OwnerController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<ApiResponse<OwnerResponseDTO>> updateOwner(@PathVariable Long id, @RequestBody Owner owner) {
+    public ResponseEntity<ApiResponse<OwnerResponseDTO>> updateOwner(@PathVariable Long id, @Valid @RequestBody Owner owner) {
         Owner updatedOwner = ownerService.updateOwner(id, owner);
         return ResponseEntity.ok(new ApiResponse<>("Owner updated successfully", toResponse(updatedOwner)));
     }

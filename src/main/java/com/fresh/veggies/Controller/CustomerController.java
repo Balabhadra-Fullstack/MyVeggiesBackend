@@ -2,6 +2,7 @@ package com.fresh.veggies.Controller;
 
 import java.util.List;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,7 +31,7 @@ public class CustomerController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<ApiResponse<Customer>> addCustomer(@RequestBody Customer customer) {
+    public ResponseEntity<ApiResponse<Customer>> addCustomer(@Valid @RequestBody Customer customer) {
         Customer addedCustomer = customerService.addCustomer(customer);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ApiResponse<>("Customer added successfully", addedCustomer));
@@ -49,7 +50,7 @@ public class CustomerController {
     @PutMapping("/update/{id}")
     public ResponseEntity<ApiResponse<Customer>> updateCustomer(
             @PathVariable Long id,
-            @RequestBody Customer customer) {
+            @Valid @RequestBody Customer customer) {
         Customer updatedCustomer = customerService.updateCustomer(id, customer);
         return ResponseEntity.ok(new ApiResponse<>("Customer updated successfully", updatedCustomer));
     }

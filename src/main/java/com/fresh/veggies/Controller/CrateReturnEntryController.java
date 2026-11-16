@@ -2,6 +2,7 @@ package com.fresh.veggies.Controller;
 
 import java.util.List;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,7 +30,7 @@ public class CrateReturnEntryController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<ApiResponse<CrateReturnEntry>> addCrateReturnEntry(@RequestBody crateReturnRequestDTO crateReturnEntry) {
+    public ResponseEntity<ApiResponse<CrateReturnEntry>> addCrateReturnEntry(@Valid @RequestBody crateReturnRequestDTO crateReturnEntry) {
         CrateReturnEntry savedEntry = crateReturnEntryService.addCrateReturnEntry(crateReturnEntry);
                            if(savedEntry==null){
                                ApiResponse<CrateReturnEntry> response=new ApiResponse<>(); 
@@ -60,7 +61,7 @@ public class CrateReturnEntryController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<CrateReturnEntry> updateCrateReturnEntry(@PathVariable Long id, @RequestBody CrateReturnEntry crateReturnEntry) {
+    public ResponseEntity<CrateReturnEntry> updateCrateReturnEntry(@PathVariable Long id, @Valid @RequestBody CrateReturnEntry crateReturnEntry) {
         return ResponseEntity.ok(crateReturnEntryService.updateCrateReturnEntry(id, crateReturnEntry));
     }
 

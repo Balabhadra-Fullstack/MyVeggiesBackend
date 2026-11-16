@@ -31,7 +31,7 @@ class CrudServicesTest {
     private OwnerRepo ownerRepo;
 
     @Mock
-    private VegetableRepo vegetableRepo;
+    private VegetableRepo vegetableRepository;
 
   
     @Mock
@@ -45,9 +45,6 @@ class CrudServicesTest {
 
     @Mock
     private CrateEntryRepo crateEntryRepo;
-
-    @Mock
-    private VegetableRepo vegetableRepository;
 
     @InjectMocks
     private OwnerService ownerService;
@@ -80,7 +77,7 @@ class CrudServicesTest {
         vegetable.setId(1L);
         vegetable.setName("Tomato");
 
-        when(vegetableRepo.findAll()).thenReturn(List.of(vegetable));
+        when(vegetableRepository.findAll()).thenReturn(List.of(vegetable));
 
         assertEquals(1, vegetableService.getAllVegetables().size());
     }
@@ -96,15 +93,15 @@ class CrudServicesTest {
         addVeggies patch = new addVeggies();
         patch.setImage("new-image");
 
-        when(vegetableRepo.findById(1L)).thenReturn(java.util.Optional.of(vegetable));
-        when(vegetableRepo.save(vegetable)).thenReturn(vegetable);
+        when(vegetableRepository.findById(1L)).thenReturn(java.util.Optional.of(vegetable));
+        when(vegetableRepository.save(vegetable)).thenReturn(vegetable);
 
         Vegetable updated = vegetableService.patchVegetable(1L, patch);
 
         assertEquals("Tomato", updated.getName());
         assertEquals("Tamatar", updated.getOdianame());
         assertEquals("new-image", updated.getImage());
-        verify(vegetableRepo).save(vegetable);
+        verify(vegetableRepository).save(vegetable);
     }
 
 

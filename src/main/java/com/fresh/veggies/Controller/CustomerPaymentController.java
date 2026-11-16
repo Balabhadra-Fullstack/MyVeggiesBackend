@@ -1,7 +1,12 @@
 package com.fresh.veggies.Controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
+import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -11,7 +16,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Positive;
 
 import com.fresh.veggies.DTO.ApiResponse;
 import com.fresh.veggies.DTO.CustomerPaymentResponseDto;
@@ -20,6 +29,7 @@ import com.fresh.veggies.Entity.CustomerPayment;
 import com.fresh.veggies.Services.CustomerPaymentService;
 
 @RestController
+@Validated
 @RequestMapping("/api/customer-payments")
 public class CustomerPaymentController {
 
@@ -31,7 +41,7 @@ public class CustomerPaymentController {
 
     @PostMapping("/add")
     public ResponseEntity<ApiResponse<CustomerPayment>> addCustomerPayment(
-            @RequestBody CustomerpaymentReq customerPayment) {
+            @Valid @RequestBody CustomerpaymentReq customerPayment) {
         CustomerPayment addedPayment = customerPaymentService.addCustomerPayment(customerPayment);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ApiResponse<>("Customer payment added successfully", addedPayment));
@@ -50,7 +60,7 @@ public class CustomerPaymentController {
     @PutMapping("/update/{id}")
     public ResponseEntity<ApiResponse<CustomerPayment>> updateCustomerPayment(
             @PathVariable Long id,
-            @RequestBody CustomerPayment customerPayment) {
+            @Valid @RequestBody CustomerPayment customerPayment) {
         CustomerPayment updatedPayment = customerPaymentService.updateCustomerPayment(id, customerPayment);
         return ResponseEntity.ok(new ApiResponse<>("Customer payment updated successfully", updatedPayment));
     }
@@ -67,5 +77,22 @@ public class CustomerPaymentController {
     public ResponseEntity<List<CustomerPaymentResponseDto>> last3PaymentByCustomerId(
             @PathVariable Long customerId) {
         return ResponseEntity.ok(customerPaymentService.last3PaymentByCustomerId(customerId));
+    }
+
+    @GetMapping("/by-customer/{customerId}")
+    public ResponseEntity<Page<CustomerPaymentResponseDto>> getCustomerPaymentsByCustomerId(
+            @PathVariable Long customerId,
+            @RequestParam LocalDate startDate,
+            @RequestParam LocalDate endDate,
+            @Positive @RequestParam(defaultValue = "30") int size,
+            @Min(0) @RequestParam(defaultValue = "0") int page) {
+        Pageable pageable = PageRequest.of(page, size);
+        return ResponseEntity.ok(customerPaymentService.getCustomerPaymentsByCustomerId(
+                customerId, pageable, startDate, endDate));
+    }
+    @GetMapping("/getbypaymentid/{paymentId}")
+    public ResponseEntity<CustomerPaymentResponseDto> getByPaymentId(@PathVariable Long paymentId) {
+        CustomerPaymentResponseDto payment = customerPaymentService.getByPaymentId(paymentId);
+        return ResponseEntity.ok(payment);
     }
 }

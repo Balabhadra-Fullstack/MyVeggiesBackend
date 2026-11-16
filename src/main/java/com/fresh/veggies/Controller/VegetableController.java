@@ -4,8 +4,11 @@ import com.fresh.veggies.DTO.addVeggies;
 import com.fresh.veggies.DTO.ApiResponse;
 import com.fresh.veggies.Entity.Vegetable;
 import com.fresh.veggies.Services.VegetableService;
+import jakarta.validation.Valid;
+import jakarta.validation.groups.Default;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,7 +26,8 @@ public class VegetableController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<ApiResponse<Vegetable>> addVegetable(@RequestBody addVeggies vegetable) {
+    public ResponseEntity<ApiResponse<Vegetable>> addVegetable(
+            @Validated({Default.class, addVeggies.FullRequest.class}) @RequestBody addVeggies vegetable) {
         Vegetable addedVegetable = vegetableService.addVegetable(vegetable);
         return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse<>("Vegetable added successfully", addedVegetable));
     }
@@ -39,13 +43,16 @@ public class VegetableController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<ApiResponse<Vegetable>> updateVegetable(@PathVariable Long id, @RequestBody addVeggies vegetable) {
+    public ResponseEntity<ApiResponse<Vegetable>> updateVegetable(
+            @PathVariable Long id,
+            @Validated({Default.class, addVeggies.FullRequest.class}) @RequestBody addVeggies vegetable) {
         Vegetable updatedVegetable = vegetableService.updateVegetable(id, vegetable);
         return ResponseEntity.ok(new ApiResponse<>("Vegetable updated successfully", updatedVegetable));
     }
 
     @PatchMapping("/update/{id}")
-    public ResponseEntity<ApiResponse<Vegetable>> patchVegetable(@PathVariable Long id, @RequestBody addVeggies vegetable) {
+    public ResponseEntity<ApiResponse<Vegetable>> patchVegetable(
+            @PathVariable Long id, @Valid @RequestBody addVeggies vegetable) {
         Vegetable patchedVegetable = vegetableService.patchVegetable(id, vegetable);
         return ResponseEntity.ok(new ApiResponse<>("Vegetable partially updated successfully", patchedVegetable));
     }

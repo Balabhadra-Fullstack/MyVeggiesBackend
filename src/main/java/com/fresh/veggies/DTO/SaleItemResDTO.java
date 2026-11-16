@@ -9,12 +9,14 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class SaleItemResDTO {
+   private Long vegetableId;
    private String vegetableName;
 private BigDecimal kg;
 private BigDecimal salePrice;
 private BigDecimal totalAmount;
 
-   public SaleItemResDTO(String vegetableName, BigDecimal kg, BigDecimal salePrice, BigDecimal totalAmount) {
+   public SaleItemResDTO(Long vegetableId, String vegetableName, BigDecimal kg, BigDecimal salePrice, BigDecimal totalAmount) {
+      this.vegetableId = vegetableId;
       this.vegetableName = vegetableName;
       this.kg = kg;
       this.salePrice = salePrice;

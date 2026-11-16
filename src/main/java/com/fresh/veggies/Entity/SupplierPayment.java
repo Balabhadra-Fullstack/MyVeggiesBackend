@@ -1,6 +1,9 @@
 package com.fresh.veggies.Entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -17,12 +20,17 @@ public class SupplierPayment {
     private Long id;
      @ManyToOne
     @JoinColumn(name = "supplier_id",nullable = false)
+    @NotNull(message = "Supplier is required")
     private Supplier supplier;
 
+    @NotNull(message = "Payment amount is required")
+    @Positive(message = "Payment amount must be greater than zero")
     private BigDecimal paymentAmount;
 
+    @NotBlank(message = "Payment method is required")
     private String paymentMethod;
 
+    @NotNull(message = "Payment date is required")
     private LocalDate paymentDateTime;
 
     public SupplierPayment(Long id, Supplier supplier, BigDecimal paymentAmount, String paymentMethod, LocalDate paymentDateTime) {

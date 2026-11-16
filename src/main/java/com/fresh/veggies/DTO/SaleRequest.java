@@ -5,12 +5,26 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 
 public class SaleRequest {
 
+    @NotNull(message = "Customer id is required")
+    @Positive(message = "Customer id must be positive")
     private Long customerId;
+
+    @NotNull(message = "Sale date is required")
     private LocalDate saleDate;
+
+    @NotEmpty(message = "At least one sale item is required")
+    @Valid
     private List<SaleItemRequest> saleItems = new ArrayList<>();
+
+    @PositiveOrZero(message = "Crate count cannot be negative")
     private BigDecimal crateCount;
 
     public SaleRequest() {

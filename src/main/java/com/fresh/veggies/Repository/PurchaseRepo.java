@@ -4,6 +4,8 @@ package com.fresh.veggies.Repository;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.fresh.veggies.Entity.Purchase;
 
@@ -12,5 +14,9 @@ public interface PurchaseRepo extends JpaRepository<Purchase, Long> {
     List<Purchase> findByEntryDate(LocalDate entryDate);
     List<Purchase> findTop3BySupplierIdOrderByEntryDateDesc(Long supplierId);
 
-
+  List<Purchase> findTop30BySupplierIdOrderByEntryDateDesc(
+        Long supplierId
+    );
+    Page<Purchase> findBySupplierIdAndEntryDateBetweenOrderByEntryDateDesc(Long supplierId,LocalDate satrtdate,LocalDate endate,Pageable pagebale);
+     List<Purchase> findBySupplierIdAndEntryDateBetweenOrderByEntryDateDesc(Long supplierId,LocalDate satrtdate,LocalDate endate);
 }

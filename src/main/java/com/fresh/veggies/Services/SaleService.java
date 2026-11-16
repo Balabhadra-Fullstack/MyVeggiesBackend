@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +15,7 @@ import com.fresh.veggies.DTO.SaleItemRequest;
 import com.fresh.veggies.DTO.SaleItemResDTO;
 import com.fresh.veggies.DTO.SaleRequest;
 import com.fresh.veggies.DTO.SaleResponseDTO;
+import com.fresh.veggies.DTO.SaleResponseWithCrate;
 import com.fresh.veggies.Entity.CrateEntry;
 import com.fresh.veggies.Entity.Customer;
 import com.fresh.veggies.Entity.Sale;
@@ -173,7 +176,7 @@ public class SaleService {
 
         List<SaleItemResDTO> saleItems = sale.getItems().stream().map(item -> {
             SaleItemResDTO itemResDTO = new SaleItemResDTO();
-            itemResDTO.setVegetableName(item.getVegitable().getName());
+            itemResDTO.setVegetableName(item.getVegitable().getOdianame());
             itemResDTO.setKg(item.getKg());
             itemResDTO.setSalePrice(item.getPrice());
             itemResDTO.setTotalAmount(item.getTotalunitprice());
@@ -185,5 +188,74 @@ public class SaleService {
     }
     public List<CrateResponseDTO> getCrateDetailsByCustomerId(Long customerId) {
         return saleRepository.findCrateDetailsByCustomerId(customerId);
+    }
+    public List <SaleResponseWithCrate> get30(Long customerId){
+        List<Sale> sales = saleRepository.findTop30ByCustomerIdOrderBySaleDateDesc(customerId);
+        return sales.stream().map(sale -> {
+            SaleResponseWithCrate responseDTO = new SaleResponseWithCrate();
+            responseDTO.setSaleId(sale.getId());
+            responseDTO.setCustomerId(sale.getCustomer().getId());
+            responseDTO.setCustomername(sale.getCustomer().getName());
+            responseDTO.setSaleDate(sale.getSaleDate());
+            responseDTO.setTotalsaleAmount(sale.getTotalsaleamount());
+
+            List<SaleItemResDTO> saleItems = sale.getItems().stream().map(item -> {
+                SaleItemResDTO itemResDTO = new SaleItemResDTO();
+                itemResDTO.setVegetableId(item.getVegitable().getId());
+                itemResDTO.setVegetableName(item.getVegitable().getOdianame());
+                itemResDTO.setKg(item.getKg());
+                itemResDTO.setSalePrice(item.getPrice());
+                itemResDTO.setTotalAmount(item.getTotalunitprice());
+                return itemResDTO;
+            }).collect(Collectors.toList());
+
+            responseDTO.setSaleItems(saleItems);
+
+            CrateEntry crateEntry = crateEntryRepository.findBySaleId(sale.getId()).orElse(null);
+            if (crateEntry != null) {
+                responseDTO.setCrateCount(crateEntry.getQuantity());
+            } else {
+                responseDTO.setCrateCount(BigDecimal.ZERO);
+            }
+
+            return responseDTO;
+        }).collect(Collectors.toList());
+    }
+    @Transactional(readOnly = true)
+    public Page<SaleResponseDTO> getdata(Long customerId,LocalDate startdate,LocalDate enddate,Pageable pageable){
+         return saleRepository.findByCustomerIdAndSaleDateBetweenOrderBySaleDateDesc(customerId, startdate, enddate, pageable)
+                 .map(this::convertToResponseDTO);
+    }
+    public SaleResponseWithCrate getSaleByID(Long id) {
+        Sale sale = saleRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Sale not found with id: " + id));
+
+        SaleResponseWithCrate responseDTO = new SaleResponseWithCrate();
+        responseDTO.setSaleId(sale.getId());
+        responseDTO.setCustomerId(sale.getCustomer().getId());
+        responseDTO.setCustomername(sale.getCustomer().getName());
+        responseDTO.setSaleDate(sale.getSaleDate());
+        responseDTO.setTotalsaleAmount(sale.getTotalsaleamount());
+
+        List<SaleItemResDTO> saleItems = sale.getItems().stream().map(item -> {
+            SaleItemResDTO itemResDTO = new SaleItemResDTO();
+            itemResDTO.setVegetableId(item.getVegitable().getId());
+            itemResDTO.setVegetableName(item.getVegitable().getName());
+            itemResDTO.setKg(item.getKg());
+            itemResDTO.setSalePrice(item.getPrice());
+            itemResDTO.setTotalAmount(item.getTotalunitprice());
+            return itemResDTO;
+        }).collect(Collectors.toList());
+
+        responseDTO.setSaleItems(saleItems);
+
+        CrateEntry crateEntry = crateEntryRepository.findBySaleId(sale.getId()).orElse(null);
+        if (crateEntry != null) {
+            responseDTO.setCrateCount(crateEntry.getQuantity());
+        } else {
+            responseDTO.setCrateCount(BigDecimal.ZERO);
+        }
+
+        return responseDTO;
     }
 }

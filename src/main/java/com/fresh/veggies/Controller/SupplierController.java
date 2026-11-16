@@ -9,6 +9,7 @@ import com.fresh.veggies.DTO.SupplierMoneyCalculationRes;
 import com.fresh.veggies.Entity.Supplier;
 import com.fresh.veggies.Services.SupplierService;
 
+import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -22,7 +23,7 @@ public class SupplierController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<ApiResponse<Supplier>> addSupplier(@RequestBody Supplier supplier) {
+    public ResponseEntity<ApiResponse<Supplier>> addSupplier(@Valid @RequestBody Supplier supplier) {
 
         Supplier addedSupplier = supplierService.addSupplier(supplier);
 
@@ -51,7 +52,7 @@ public class SupplierController {
     @PutMapping("/update/{id}")
     public ResponseEntity<ApiResponse<Supplier>> updateSupplier(
             @PathVariable Long id,
-            @RequestBody Supplier supplier) {
+            @Valid @RequestBody Supplier supplier) {
 
         Supplier updatedSupplier = supplierService.updateSupplier(id, supplier);
 

@@ -5,14 +5,26 @@ import com.fresh.veggies.DTO.PurchaseResponseDTO;
 import com.fresh.veggies.DTO.ApiResponse;
 import com.fresh.veggies.Entity.Purchase;
 import com.fresh.veggies.Services.PurchaseService;
+
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Positive;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.annotation.Validated;
+
 
 @RestController
+@Validated
 @RequestMapping("/api/purchases")
 public class PurchaseController {
 
@@ -23,7 +35,7 @@ public class PurchaseController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<ApiResponse<String>> addPurchase(@RequestBody PurchaseRequestDTO purchaseRequestDTO) {
+    public ResponseEntity<ApiResponse<String>> addPurchase(@Valid @RequestBody PurchaseRequestDTO purchaseRequestDTO) {
        String msg= purchaseService.addPurchase(purchaseRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse<>(msg, msg));
     }
@@ -44,7 +56,7 @@ public class PurchaseController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<ApiResponse<String>> updatePurchase(@PathVariable Long id, @RequestBody PurchaseRequestDTO purchase) {
+    public ResponseEntity<ApiResponse<String>> updatePurchase(@PathVariable Long id, @Valid @RequestBody PurchaseRequestDTO purchase) {
         purchaseService.updatePurchase(id, purchase);
         return ResponseEntity.ok(new ApiResponse<>("Purchase updated successfully", "Purchase with id " + id + " has been updated"));
     }
@@ -63,6 +75,20 @@ public class PurchaseController {
         List<PurchaseResponseDTO> items=purchaseService.last3Purchase(id);
         return ResponseEntity.ok(items);
     }
+    @GetMapping("/last30Purchase/{id}")
+    public ResponseEntity<List<PurchaseResponseDTO>> last30Record(@PathVariable Long id){
+        List<PurchaseResponseDTO> items=purchaseService.last30Purchase(id);
+        return ResponseEntity.ok(items);
     }
-    
+    @GetMapping("/getPaginationData/{id}/date-range")
+     public ResponseEntity<Page<PurchaseResponseDTO>> getallById(@PathVariable Long id,
+        @RequestParam LocalDate startdate,
+        @RequestParam LocalDate enddate,
+       @Min(0) @RequestParam (defaultValue = "0") int pagee,
+          @Positive @RequestParam (defaultValue = "30")int size
+     ){
+                           Pageable pp=PageRequest.of(pagee, size);
+       return ResponseEntity.ok(purchaseService.getdata(id, startdate, enddate, pp));
+    }
+}
 
