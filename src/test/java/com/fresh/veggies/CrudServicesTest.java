@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.ArgumentCaptor;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -29,6 +30,9 @@ class CrudServicesTest {
 
     @Mock
     private OwnerRepo ownerRepo;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     @Mock
     private VegetableRepo vegetableRepository;
@@ -65,10 +69,13 @@ class CrudServicesTest {
         Owner owner = new Owner();
         owner.setId(1L);
         owner.setName("Aman");
+        owner.setPassword("secret");
 
+        when(passwordEncoder.encode("secret")).thenReturn("encoded-secret");
         when(ownerRepo.save(owner)).thenReturn(owner);
 
         assertEquals(owner, ownerService.addOwner(owner));
+        assertEquals("encoded-secret", owner.getPassword());
     }
 
     @Test

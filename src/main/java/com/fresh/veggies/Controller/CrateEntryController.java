@@ -17,8 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fresh.veggies.Entity.CrateEntry;
 import com.fresh.veggies.Services.CrateEntryService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 @RestController
 @RequestMapping("/api/crate-entry")
+@SecurityRequirement(name = "bearerAuth")
 public class CrateEntryController {
 
     private final CrateEntryService crateEntryService;

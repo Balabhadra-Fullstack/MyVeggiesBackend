@@ -10,8 +10,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fresh.veggies.Services.ReportExcelService;
+
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 @RestController 
 @RequestMapping ("/api/v1/report")
+@SecurityRequirement(name = "bearerAuth")
 public class ReportExcelController {
     private final ReportExcelService service;
     public ReportExcelController(ReportExcelService serv){

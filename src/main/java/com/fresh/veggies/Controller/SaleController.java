@@ -30,9 +30,12 @@ import com.fresh.veggies.DTO.SaleResponseWithCrate;
 import com.fresh.veggies.Entity.Sale;
 import com.fresh.veggies.Services.SaleService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 @RestController
 @Validated
 @RequestMapping("/api/sale")
+@SecurityRequirement(name = "bearerAuth")
 public class SaleController {
 
     private final SaleService saleService;
@@ -69,10 +72,6 @@ public class SaleController {
         return ResponseEntity.ok(new ApiResponse<>("Sale updated successfully", "Sale with id " + id + " has been updated"));
     }
 
-    @GetMapping("/getbydate")
-    public ResponseEntity<List<Sale>> getByDate(@RequestParam LocalDate date) {
-        return ResponseEntity.ok(saleService.getByDate(date));
-    }
 
     @GetMapping("/last3Sale/{customerId}")
     public ResponseEntity<List<SaleResponseDTO>> last3Sale(@PathVariable Long customerId) {

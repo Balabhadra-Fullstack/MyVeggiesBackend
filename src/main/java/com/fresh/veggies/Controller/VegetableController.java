@@ -4,6 +4,8 @@ import com.fresh.veggies.DTO.addVeggies;
 import com.fresh.veggies.DTO.ApiResponse;
 import com.fresh.veggies.Entity.Vegetable;
 import com.fresh.veggies.Services.VegetableService;
+
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import jakarta.validation.groups.Default;
 import org.springframework.http.HttpStatus;
@@ -12,11 +14,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import org.springframework.web.bind.annotation.GetMapping;
 
 
 @RestController
 @RequestMapping("/api/vegetables")
+@SecurityRequirement(name = "bearerAuth")
 public class VegetableController {
 
     private final VegetableService vegetableService;

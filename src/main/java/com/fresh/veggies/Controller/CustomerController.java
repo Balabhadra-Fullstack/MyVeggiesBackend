@@ -20,8 +20,11 @@ import com.fresh.veggies.DTO.CustomerMoneyCalculationRes;
 import com.fresh.veggies.Entity.Customer;
 import com.fresh.veggies.Services.CustomerService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 @RestController
 @RequestMapping("/api/customers")
+@SecurityRequirement(name = "bearerAuth")
 public class CustomerController {
 
     private final CustomerService customerService;

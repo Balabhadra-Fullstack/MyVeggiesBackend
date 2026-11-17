@@ -9,11 +9,13 @@ import com.fresh.veggies.DTO.SupplierMoneyCalculationRes;
 import com.fresh.veggies.Entity.Supplier;
 import com.fresh.veggies.Services.SupplierService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/suppliers")
+@SecurityRequirement(name = "bearerAuth")
 public class SupplierController {
 
     private final SupplierService supplierService;

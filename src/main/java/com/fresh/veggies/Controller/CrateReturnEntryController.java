@@ -19,8 +19,11 @@ import com.fresh.veggies.DTO.crateReturnRequestDTO;
 import com.fresh.veggies.Entity.CrateReturnEntry;
 import com.fresh.veggies.Services.CrateReturnEntryService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 @RestController
 @RequestMapping("/api/crate-return")
+@SecurityRequirement(name = "bearerAuth")
 public class CrateReturnEntryController {
 
     private final CrateReturnEntryService crateReturnEntryService;

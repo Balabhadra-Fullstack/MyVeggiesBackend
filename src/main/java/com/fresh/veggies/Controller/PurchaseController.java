@@ -6,6 +6,7 @@ import com.fresh.veggies.DTO.ApiResponse;
 import com.fresh.veggies.Entity.Purchase;
 import com.fresh.veggies.Services.PurchaseService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Positive;
@@ -18,14 +19,14 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+
 import org.springframework.validation.annotation.Validated;
 
 
 @RestController
 @Validated
 @RequestMapping("/api/purchases")
+@SecurityRequirement(name = "bearerAuth")
 public class PurchaseController {
 
     private final PurchaseService purchaseService;
@@ -66,10 +67,8 @@ public class PurchaseController {
         purchaseService.deletePurchase(id);
         return ResponseEntity.ok(new ApiResponse<>("Purchase deleted successfully", "Purchase with id " + id + " has been deleted"));
     }
-    @GetMapping("/getbydate")
-    public ResponseEntity<List<Purchase>> getByDate(@RequestParam LocalDate date){
-        return ResponseEntity.ok(purchaseService.getByDate(date));
-    }
+   
+    
     @GetMapping("/last3Purchase/{id}")
     public ResponseEntity<List<PurchaseResponseDTO>> last3Record(@PathVariable Long id){
         List<PurchaseResponseDTO> items=purchaseService.last3Purchase(id);

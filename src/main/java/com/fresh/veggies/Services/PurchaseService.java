@@ -146,9 +146,8 @@ public class PurchaseService {
         Purchase existingPurchase = getPurchaseById(id);
         purchaseRepository.delete(existingPurchase);
     }
-    public List<Purchase>getByDate(LocalDate date){
-         return purchaseRepository.findByEntryDate(date);
-    }
+   
+    
     public List<PurchaseResponseDTO> last3Purchase(Long supplierId){
         List<Purchase> purchase = purchaseRepository.findTop3BySupplierIdOrderByEntryDateDesc(supplierId);
                return purchase.stream().map(this::convertDTO).toList();

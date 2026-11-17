@@ -2,6 +2,7 @@ package com.fresh.veggies.Services;
 
 import com.fresh.veggies.Entity.Owner;
 import com.fresh.veggies.Repository.OwnerRepo;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,12 +11,15 @@ import java.util.List;
 public class OwnerService {
 
     private final OwnerRepo ownerRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public OwnerService(OwnerRepo ownerRepository) {
+    public OwnerService(OwnerRepo ownerRepository, PasswordEncoder passwordEncoder) {
         this.ownerRepository = ownerRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Owner addOwner(Owner owner) {
+        owner.setPassword(passwordEncoder.encode(owner.getPassword()));
         return ownerRepository.save(owner);
     }
 
@@ -33,7 +37,7 @@ public class OwnerService {
 
         existingOwner.setName(owner.getName());
         existingOwner.setEmail(owner.getEmail());
-        existingOwner.setPassword(owner.getPassword());
+        existingOwner.setPassword(passwordEncoder.encode(owner.getPassword()));
         existingOwner.setPhoneNumber(owner.getPhoneNumber());
         existingOwner.setAddress(owner.getAddress());
 

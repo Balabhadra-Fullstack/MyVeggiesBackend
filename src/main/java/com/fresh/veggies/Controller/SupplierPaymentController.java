@@ -5,6 +5,8 @@ import com.fresh.veggies.DTO.SupplierPaymentResponseDTO;
 import com.fresh.veggies.DTO.ApiResponse;
 import com.fresh.veggies.Entity.SupplierPayment;
 import com.fresh.veggies.Services.SupplierPaymentService;
+
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +31,7 @@ import java.util.List;
 @RestController
 @Validated
 @RequestMapping("/api/supplier-payments")
+@SecurityRequirement(name = "bearerAuth")
 public class SupplierPaymentController {
 
     private final SupplierPaymentService supplierPaymentService;

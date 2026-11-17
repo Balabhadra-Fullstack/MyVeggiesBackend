@@ -3,6 +3,8 @@ package com.fresh.veggies.Controller;
 import com.fresh.veggies.Entity.VegCategory;
 import com.fresh.veggies.DTO.ApiResponse;
 import com.fresh.veggies.Services.VegCategoryService;
+
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/vegcategories")
+@SecurityRequirement(name = "bearerAuth")
 public class VegCategoryController {
 
     private final VegCategoryService vegCategoryService;

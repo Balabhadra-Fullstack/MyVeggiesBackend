@@ -28,9 +28,12 @@ import com.fresh.veggies.DTO.CommissionResponse;
 import com.fresh.veggies.Entity.CommissionPurchase;
 import com.fresh.veggies.Services.CommissionPurchaseService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 @RestController
 @Validated
 @RequestMapping("/api/commission-purchases")
+@SecurityRequirement(name = "bearerAuth")
 public class CommissionPurchaseController {
 
     private final CommissionPurchaseService commissionPurchaseService;

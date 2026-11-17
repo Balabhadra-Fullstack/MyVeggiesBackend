@@ -3,6 +3,7 @@ package com.fresh.veggies.Controller;
 import com.fresh.veggies.Entity.Owner;
 import com.fresh.veggies.DTO.ApiResponse;
 import com.fresh.veggies.DTO.OwnerResponseDTO;
+import com.fresh.veggies.DTO.ownerRequest;
 import com.fresh.veggies.Services.OwnerService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/owners")
+//@SecurityRequirement(name = "bearerAuth")
 public class OwnerController {
 
     private final OwnerService ownerService;
@@ -22,7 +24,13 @@ public class OwnerController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<ApiResponse<OwnerResponseDTO>> addOwner(@Valid @RequestBody Owner owner) {
+    public ResponseEntity<ApiResponse<OwnerResponseDTO>> addOwner(@Valid @RequestBody ownerRequest ownerrequest) {
+        Owner owner = new Owner();
+        owner.setName(ownerrequest.getName());
+        owner.setEmail(ownerrequest.getEmail());
+        owner.setPassword(ownerrequest.getPassword());
+        owner.setPhoneNumber(ownerrequest.getPhoneNumber());
+        owner.setAddress(ownerrequest.getAddress());
         Owner addedOwner = ownerService.addOwner(owner);
         return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse<>("Owner added successfully", toResponse(addedOwner)));
     }

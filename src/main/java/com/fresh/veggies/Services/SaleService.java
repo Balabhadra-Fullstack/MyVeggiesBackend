@@ -136,10 +136,6 @@ public class SaleService {
         return saleRepository.save(existingSale);
     }
 
-    public List<Sale> getByDate(LocalDate date) {
-        return saleRepository.findBySaleDate(date);
-    }
-
     public List<SaleResponseDTO> last3Sale(Long customerId) {
         List<Sale> sales = saleRepository.findTop3ByCustomerIdOrderBySaleDateDesc(customerId);
         return sales.stream().map(this::convertToResponseDTO).collect(Collectors.toList());

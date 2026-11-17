@@ -15,7 +15,6 @@ public interface SaleRepo extends JpaRepository<Sale, Long> {
     List<Sale> findByCustomerId(Long customerId);
     List<Sale> findTop3ByCustomerIdOrderBySaleDateDesc(Long customerId);
    public   List <Sale> findTop30ByCustomerIdOrderBySaleDateDesc(Long customerId);
-    List<Sale> findBySaleDate(java.time.LocalDate saleDate);
     Page<Sale> findByCustomerIdAndSaleDateBetweenOrderBySaleDateDesc(Long customerId,LocalDate startDate,LocalDate endDate,Pageable pageable);
   @Query("""
     SELECT new com.fresh.veggies.DTO.CrateResponseDTO(

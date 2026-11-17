@@ -28,9 +28,12 @@ import com.fresh.veggies.DTO.CustomerpaymentReq;
 import com.fresh.veggies.Entity.CustomerPayment;
 import com.fresh.veggies.Services.CustomerPaymentService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 @RestController
 @Validated
 @RequestMapping("/api/customer-payments")
+@SecurityRequirement(name = "bearerAuth")
 public class CustomerPaymentController {
 
     private final CustomerPaymentService customerPaymentService;

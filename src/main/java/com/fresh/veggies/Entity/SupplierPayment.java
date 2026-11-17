@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
+@Table(indexes = @Index(name = "idx_supplier_payment_supplier_date", columnList = "supplier_id, payment_date_time"))
 @Getter
 @Setter
 @NoArgsConstructor

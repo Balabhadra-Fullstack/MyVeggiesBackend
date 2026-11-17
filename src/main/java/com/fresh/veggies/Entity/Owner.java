@@ -20,8 +20,10 @@ public class Owner {
     private Long id;
     @NotBlank(message = "Owner name is required")
     private String name;
+    @NotBlank(message = "Owner email is required")
     @Email(message = "Email must be valid")
     private String email;
+    @NotBlank(message = "Owner password is required")
     private String password;
     private String phoneNumber;
     private String address;
